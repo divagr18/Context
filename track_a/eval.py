@@ -25,8 +25,7 @@ import torch
 from track_a.data.budget_sampler import available_ratios
 from track_a.data.pack import budget_token_id, special_id
 from track_a.evalkit.grading import (
-    decoy_triples, fact_triples_from_records, ground_truth_triples,
-    recall_and_hallucination,
+    fact_triples_from_records, ground_truth_triples,
 )
 from track_a.model.core import Transformer
 from track_a.model.generate import greedy_generate
@@ -63,6 +62,31 @@ def normalize_answer(text: str) -> str:
 def _fact_name(fact_db, fact):
     ent = fact_db.entity_by_id(fact.entity_ids[0]) if fact.entity_ids else None
     return canonicalize_value(ent.name) if ent is not None else None
+
+
+def _attested_triples(fact_db, facts) -> set[tuple[str, str, str]]:
+    """(name, attr, value) triples that ``facts`` can legitimately render.
+
+    Every chain position of value-type facts, plus the single claimed value
+    of non-conflict uncertainty facts (rendered as hedged FACT lines). A
+    parsed triple outside the document's attested set is a fabrication, not
+    a tolerated decoy (PLAN Q10).
+    """
+    out: set[tuple[str, str, str]] = set()
+    for f in facts:
+        name = _fact_name(fact_db, f)
+        if name is None:
+            continue
+        if f.type in _VALUE_TYPES:
+            values = f.values
+        elif (f.type is FactType.UNCERTAINTY
+              and f.uncertainty_kind is not UncertaintyKind.CONFLICT):
+            values = f.values[:1]
+        else:
+            continue
+        for v in values:
+            out.add((name, f.attribute or "", canonicalize_value(v)))
+    return out
 
 
 def _exact_hit(fact_db, f, parsed_triples, parsed_rels, parsed_negs,
@@ -119,10 +143,12 @@ def _parsed_sets(records, names):
 def grade_generation(fact_db, text: str, tok=None, budget=None) -> dict:
     """Model-free grading of one generated C against ground truth.
 
-    Ground truth is C*(budget) when ``budget`` (and ``tok``) are given
-    (PLAN 2.6: per-budget ground truth -- the longest-prefix render may
-    legitimately cut queried units); otherwise all queried facts. Survival
-    denominators count only facts that C*(budget) itself contains.
+    Ground truth is the QUERIED facts that C*(budget) contains when
+    ``budget`` (and ``tok``) are given (PLAN 2.6 per-budget ground truth;
+    the longest-prefix render may legitimately cut queried units, and decoys
+    within C* are tolerated emission, never needles); otherwise all queried
+    facts. A chain's prior value counts as recovered whether values[-2] rides
+    an intermediate line's value or the final line's supersedes= slot.
     """
     lines = [l for l in text.split("\n") if l.strip()]
     records, failures = parse_target_lines(lines)
@@ -139,22 +165,28 @@ def grade_generation(fact_db, text: str, tok=None, budget=None) -> dict:
             [l for l in c_star.split("\n") if l.strip()])
         c_names = {r.eid: r.name for r in c_records
                    if isinstance(r, EntityRec)}
-        (gt, _c_pairs, c_rels, c_negs, c_unres,
+        (c_triples, _c_pairs, c_rels, c_negs, c_unres,
          c_hedged) = _parsed_sets(c_records, c_names)
+        # PLAN 2.6/2.7/Q10: the survival + inversion ground truth is the
+        # QUERIED facts that C*(budget) contains. Decoys inside C* are
+        # tolerated emission -- not needles to survive, not drops to penalize.
+        gt = ground_truth_triples(fact_db) & c_triples
 
         def in_c_star(f):
-            return _exact_hit(fact_db, f, gt, c_rels, c_negs, c_unres,
-                              c_hedged)
+            return _exact_hit(fact_db, f, c_triples, c_rels, c_negs,
+                              c_unres, c_hedged)
     else:
         gt = ground_truth_triples(fact_db)
 
         def in_c_star(f):
             return True
 
-    decoys = decoy_triples(fact_db)
-    recall, halluc = recall_and_hallucination(parsed_triples, gt, decoys)
-
     queried = [f for f in fact_db.facts if f.is_queried]
+    decoy_facts = [f for f in fact_db.facts if not f.is_queried]
+    attested_decoy = _attested_triples(fact_db, decoy_facts)
+    attested = _attested_triples(fact_db, queried) | attested_decoy
+    recall = len(parsed_triples & gt) / len(gt) if gt else 1.0
+    halluc = len(parsed_triples - attested) / max(1, len(parsed_triples))
     survival_exact: dict[str, list] = defaultdict(lambda: [0, 0])
     survival_partial: dict[str, list] = defaultdict(lambda: [0, 0])
     fact_outcomes: list[tuple] = []
@@ -191,6 +223,10 @@ def grade_generation(fact_db, text: str, tok=None, budget=None) -> dict:
             prior = any(
                 isinstance(r, FactRec) and names.get(r.eid) == name
                 and r.attr == (f.attribute or "")
+                and canonicalize_value(r.value) == prev
+                for r in records) or any(
+                isinstance(r, FactRec) and names.get(r.eid) == name
+                and r.attr == (f.attribute or "")
                 and canonicalize_value(r.value) == final
                 and r.supersedes is not None
                 and canonicalize_value(r.supersedes) == prev
@@ -201,14 +237,14 @@ def grade_generation(fact_db, text: str, tok=None, budget=None) -> dict:
         state_prior = prior_hits == len(chains)
 
     dropped_queried = len(gt - parsed_triples)
-    emitted_decoy = len(parsed_triples & decoys)
+    emitted_decoy = len(parsed_triples & attested_decoy)
     return {
         "recall": recall,
         "hallucination_rate": halluc,
         "n_parse_failures": len(failures),
         "n_lines": len(lines),
         "parse_fail_rate": len(failures) / max(1, len(lines)),
-        "decoy_emission_rate": emitted_decoy / max(1, len(decoys)),
+        "decoy_emission_rate": emitted_decoy / max(1, len(attested_decoy)),
         "dropped_queried": dropped_queried,
         "emitted_decoy": emitted_decoy,
         "inversion": dropped_queried >= 1 and emitted_decoy >= 1,

@@ -124,6 +124,52 @@ def test_chain_current_and_prior_value_recovery(tok):
     assert g2["state_prior"] is False
 
 
+def test_chain_three_value_prior_recovery_via_intermediate(tok):
+    """3-value chains are the generator majority (2-hop majority, PLAN 5.2).
+    The render pins supersedes=ORIGINAL on every line (generate.py), so the
+    prior value values[-2] only rides the VALUE of the newest intermediate
+    line; the grader must recover it from either slot."""
+    ent = Entity(id="E0001", type="system", name="Alpha_Core", aliases=())
+    chain = Fact(id="F0001", type=FactType.STATE_TRANSITION,
+                 entity_ids=("E0001",), attribute="status",
+                 values=("v1", "v2", "v3"), scene_positions=(0, 3, 7),
+                 is_queried=True)
+    db = FactDB(doc_id="chain3-doc", entities=(ent,), facts=(chain,),
+                questions=())
+    text = canonical_order_and_render(db, 512, tok)
+    assert "supersedes=v1" in text, "supersedes always carries the original"
+    assert "= v2" in text, "intermediate transition must carry values[-2]"
+    g = eval_mod.grade_generation(db, text, tok=tok, budget=512)
+    assert g["state_current"] is True
+    assert g["state_prior"] is True, \
+        "oracle C* of a 3-value chain must recover the prior value"
+
+
+def test_inversion_does_not_count_dropped_decoys(tok):
+    """PLAN 2.7: inversion = dropped >=1 QUERIED fact AND emitted >=1 decoy.
+    Dropping a decoy that C* contained (queried intact) is NOT an inversion."""
+    ent = Entity(id="E0001", type="system", name="Alpha_Core", aliases=())
+    queried = Fact(id="F0001", type=FactType.EXACT_VALUE,
+                   entity_ids=("E0001",), attribute="version",
+                   values=("v9",), scene_positions=(0,), is_queried=True)
+    decoy_a = Fact(id="F0002", type=FactType.EXACT_VALUE,
+                   entity_ids=("E0001",), attribute="port",
+                   values=("8080",), scene_positions=(1,), is_queried=False)
+    decoy_b = Fact(id="F0003", type=FactType.EXACT_VALUE,
+                   entity_ids=("E0001",), attribute="zone",
+                   values=("z1",), scene_positions=(2,), is_queried=False)
+    db = FactDB(doc_id="decoy-doc", entities=(ent,),
+                facts=(queried, decoy_a, decoy_b), questions=())
+    full = canonical_order_and_render(db, 512, tok)
+    assert ".zone" in full, "fixture C* must include the second decoy"
+    text = "\n".join(l for l in full.split("\n") if ".zone" not in l)
+    g = eval_mod.grade_generation(db, text, tok=tok, budget=512)
+    assert g["recall"] == 1.0, "queried fact must survive"
+    assert g["emitted_decoy"] == 1, "first decoy still emitted"
+    assert g["inversion"] is False, \
+        "dropping only a decoy (queried intact) is not a salience inversion"
+
+
 def test_hallucination_and_decoy_emission_distances(tok, built_doc):
     db = built_doc.fact_db
     full = canonical_order_and_render(db, db.doc_len_tokens * 4, tok)
