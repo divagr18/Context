@@ -334,8 +334,12 @@ def evaluate_shards(model, tok, shard_paths, device, max_docs=None,
         else None,
         "hallucination_rate": _mean([h for v in per_ratio_hall.values()
                                      for h in v]),
+        "hallucination_rate_by_ratio": {r: _mean(v)
+                                        for r, v in per_ratio_hall.items()},
         "decoy_emission_rate": _mean([d for v in per_ratio_decoy.values()
                                       for d in v]),
+        "decoy_emission_rate_by_ratio": {r: _mean(v)
+                                         for r, v in per_ratio_decoy.items()},
         "salience_inversions": {r: _mean(v)
                                 for r, v in per_ratio_inversion.items()},
         "parse_fail_rate": {
@@ -412,6 +416,10 @@ def main(argv=None) -> None:
         out.write_text(json.dumps(report, indent=2, sort_keys=False),
                        encoding="utf-8")
         print(f"[eval] report -> {out}", flush=True)
+        from track_a.plot_curves import plot_rate_distortion
+        png = out.with_suffix(".png")
+        plot_rate_distortion(report, str(png))
+        print(f"[eval] curves -> {png}", flush=True)
 
 
 if __name__ == "__main__":
