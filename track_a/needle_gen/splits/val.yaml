@@ -1,0 +1,16 @@
+# val split: in-domain, held-out paraphrase index 6 (early stopping / ckpt selection).
+split: val
+kind: single_shot
+domain: project_updates
+doc_len_name: short
+n_docs: 100
+seed: 23456
+paraphrase_idx_range: [6, 6]
+decoys_per_queried: [1, 3]
+chain_fraction: 0.3
+chain_depth_max: 3
+multihop_doc_fraction: 0.15
+queried_per_100_tokens: 1.0
+streaming_ratio: 8
+window_tokens: 2048
+window_overlap_frac: 0.10

@@ -1,0 +1,17 @@
+# train split: in-domain (project_updates), paraphrase indices 0-5.
+split: train
+kind: single_shot
+domain: project_updates
+doc_len_name: short
+n_docs: 1000
+seed: 12345
+paraphrase_idx_range: [0, 5]
+decoys_per_queried: [1, 3]
+chain_fraction: 0.3
+chain_depth_max: 3
+multihop_doc_fraction: 0.15
+queried_per_100_tokens: 1.0
+# streaming knobs (used when kind: streaming)
+streaming_ratio: 8
+window_tokens: 2048
+window_overlap_frac: 0.10
