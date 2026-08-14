@@ -1,0 +1,286 @@
+scales:
+  tiny:
+    d_model: 512
+    n_layers: 8
+    target_params: 50000000
+    variants:
+      V0:
+        target_ratio: 0.15
+        n_heads: 16
+        head_dim: 32
+        n_kv_heads: 1
+        ffn_hidden: 1664
+        attn_params_per_layer: 557056
+        ffn_params_per_layer: 2555904
+        achieved_ratio: 0.17894736842105263
+        total_params: 50654720
+        params_within_tol: true
+        ratio_relaxed: true
+        single_shot:
+          max_seq: 13824
+          rope_theta: 500000
+        streaming:
+          max_seq: 20480
+          rope_theta: 500000
+      V1:
+        target_ratio: 0.25
+        n_heads: 16
+        head_dim: 32
+        n_kv_heads: 8
+        ffn_hidden: 1536
+        attn_params_per_layer: 786432
+        ffn_params_per_layer: 2359296
+        achieved_ratio: 0.25
+        total_params: 50916864
+        params_within_tol: true
+        ratio_relaxed: false
+        single_shot:
+          max_seq: 13824
+          rope_theta: 500000
+        streaming:
+          max_seq: 20480
+          rope_theta: 500000
+      V2:
+        target_ratio: 0.4
+        n_heads: 32
+        head_dim: 32
+        n_kv_heads: 4
+        ffn_hidden: 1152
+        attn_params_per_layer: 1179648
+        ffn_params_per_layer: 1769472
+        achieved_ratio: 0.4
+        total_params: 49344000
+        params_within_tol: true
+        ratio_relaxed: false
+        single_shot:
+          max_seq: 13824
+          rope_theta: 500000
+        streaming:
+          max_seq: 20480
+          rope_theta: 500000
+      V3:
+        target_ratio: 0.55
+        n_heads: 50
+        head_dim: 32
+        n_kv_heads: 1
+        ffn_hidden: 896
+        attn_params_per_layer: 1671168
+        ffn_params_per_layer: 1376256
+        achieved_ratio: 0.5483870967741935
+        total_params: 50130432
+        params_within_tol: true
+        ratio_relaxed: false
+        single_shot:
+          max_seq: 13824
+          rope_theta: 500000
+        streaming:
+          max_seq: 20480
+          rope_theta: 500000
+      V4:
+        target_ratio: 0.7
+        n_heads: 64
+        head_dim: 32
+        n_kv_heads: 2
+        ffn_hidden: 640
+        attn_params_per_layer: 2162688
+        ffn_params_per_layer: 983040
+        achieved_ratio: 0.6875
+        total_params: 50916864
+        params_within_tol: true
+        ratio_relaxed: false
+        single_shot:
+          max_seq: 13824
+          rope_theta: 500000
+        streaming:
+          max_seq: 20480
+          rope_theta: 500000
+  small:
+    d_model: 768
+    n_layers: 12
+    target_params: 150000000
+    variants:
+      V0:
+        target_ratio: 0.15
+        n_heads: 28
+        head_dim: 32
+        n_kv_heads: 1
+        ffn_hidden: 3456
+        attn_params_per_layer: 1425408
+        ffn_params_per_layer: 7962624
+        achieved_ratio: 0.1518324607329843
+        total_params: 151289088
+        params_within_tol: true
+        ratio_relaxed: false
+        single_shot:
+          max_seq: 13824
+          rope_theta: 500000
+        streaming:
+          max_seq: 69632
+          rope_theta: 500000
+      V1:
+        target_ratio: 0.25
+        n_heads: 32
+        head_dim: 32
+        n_kv_heads: 16
+        ffn_hidden: 3072
+        attn_params_per_layer: 2359296
+        ffn_params_per_layer: 7077888
+        achieved_ratio: 0.25
+        total_params: 151878912
+        params_within_tol: true
+        ratio_relaxed: false
+        single_shot:
+          max_seq: 13824
+          rope_theta: 500000
+        streaming:
+          max_seq: 69632
+          rope_theta: 500000
+      V2:
+        target_ratio: 0.4
+        n_heads: 72
+        head_dim: 32
+        n_kv_heads: 4
+        ffn_hidden: 2432
+        attn_params_per_layer: 3735552
+        ffn_params_per_layer: 5603328
+        achieved_ratio: 0.4
+        total_params: 150699264
+        params_within_tol: true
+        ratio_relaxed: false
+        single_shot:
+          max_seq: 13824
+          rope_theta: 500000
+        streaming:
+          max_seq: 69632
+          rope_theta: 500000
+      V3:
+        target_ratio: 0.55
+        n_heads: 102
+        head_dim: 32
+        n_kv_heads: 1
+        ffn_hidden: 1792
+        attn_params_per_layer: 5062656
+        ffn_params_per_layer: 4128768
+        achieved_ratio: 0.5508021390374331
+        total_params: 148929792
+        params_within_tol: true
+        ratio_relaxed: false
+        single_shot:
+          max_seq: 13824
+          rope_theta: 500000
+        streaming:
+          max_seq: 69632
+          rope_theta: 500000
+      V4:
+        target_ratio: 0.7
+        n_heads: 128
+        head_dim: 32
+        n_kv_heads: 2
+        ffn_hidden: 1152
+        attn_params_per_layer: 6389760
+        ffn_params_per_layer: 2654208
+        achieved_ratio: 0.7065217391304348
+        total_params: 147160320
+        params_within_tol: true
+        ratio_relaxed: false
+        single_shot:
+          max_seq: 13824
+          rope_theta: 500000
+        streaming:
+          max_seq: 69632
+          rope_theta: 500000
+  base:
+    d_model: 1024
+    n_layers: 16
+    target_params: 300000000
+    variants:
+      V0:
+        target_ratio: 0.15
+        n_heads: 32
+        head_dim: 32
+        n_kv_heads: 4
+        ffn_hidden: 4352
+        attn_params_per_layer: 2359296
+        ffn_params_per_layer: 13369344
+        achieved_ratio: 0.15
+        total_params: 303176704
+        params_within_tol: true
+        ratio_relaxed: false
+        single_shot:
+          max_seq: 13824
+          rope_theta: 500000
+        streaming:
+          max_seq: 69632
+          rope_theta: 500000
+      V1:
+        target_ratio: 0.25
+        n_heads: 56
+        head_dim: 32
+        n_kv_heads: 4
+        ffn_hidden: 3840
+        attn_params_per_layer: 3932160
+        ffn_params_per_layer: 11796480
+        achieved_ratio: 0.25
+        total_params: 303176704
+        params_within_tol: true
+        ratio_relaxed: false
+        single_shot:
+          max_seq: 13824
+          rope_theta: 500000
+        streaming:
+          max_seq: 69632
+          rope_theta: 500000
+      V2:
+        target_ratio: 0.4
+        n_heads: 64
+        head_dim: 32
+        n_kv_heads: 32
+        ffn_hidden: 3072
+        attn_params_per_layer: 6291456
+        ffn_params_per_layer: 9437184
+        achieved_ratio: 0.4
+        total_params: 303176704
+        params_within_tol: true
+        ratio_relaxed: false
+        single_shot:
+          max_seq: 13824
+          rope_theta: 500000
+        streaming:
+          max_seq: 69632
+          rope_theta: 500000
+      V3:
+        target_ratio: 0.55
+        n_heads: 128
+        head_dim: 32
+        n_kv_heads: 4
+        ffn_hidden: 2304
+        attn_params_per_layer: 8650752
+        ffn_params_per_layer: 7077888
+        achieved_ratio: 0.55
+        total_params: 303176704
+        params_within_tol: true
+        ratio_relaxed: false
+        single_shot:
+          max_seq: 13824
+          rope_theta: 500000
+        streaming:
+          max_seq: 69632
+          rope_theta: 500000
+      V4:
+        target_ratio: 0.7
+        n_heads: 160
+        head_dim: 32
+        n_kv_heads: 8
+        ffn_hidden: 1536
+        attn_params_per_layer: 11010048
+        ffn_params_per_layer: 4718592
+        achieved_ratio: 0.7
+        total_params: 303176704
+        params_within_tol: true
+        ratio_relaxed: false
+        single_shot:
+          max_seq: 13824
+          rope_theta: 500000
+        streaming:
+          max_seq: 69632
+          rope_theta: 500000
