@@ -178,7 +178,7 @@ def test_record_grammar_literal() -> None:
     hedge = Fact(id="F3", type=FactType.UNCERTAINTY, uncertainty_kind=UncertaintyKind.HEDGE,
                  entity_ids=("E0001",), attribute="eta", values=("soon",), scene_positions=(3,),
                  is_queried=True)
-    assert render_unit(hedge) == ("FACT E0001.eta = soon [hedged] pos=3",)
+    assert render_unit(hedge) == ("FACT E0001.eta = soon hedged pos=3",)
     conflict = Fact(id="F4", type=FactType.UNCERTAINTY,
                     uncertainty_kind=UncertaintyKind.CONFLICT, entity_ids=("E0001",),
                     attribute="owner", values=("v1", "v2"), scene_positions=(4, 9),

@@ -39,7 +39,7 @@ def render_unit(fact: Fact) -> tuple[str, ...]:
             )
             return (f"UNRESOLVED {eid}.{attr} candidates=[{parts}]",)
         val = canonicalize_value(fact.values[0]) if fact.values else ""
-        return (f"FACT {eid}.{attr} = {val} [hedged] pos={pos0}",)
+        return (f"FACT {eid}.{attr} = {val} hedged pos={pos0}",)
 
     if fact.is_chain:
         vals = [canonicalize_value(v) for v in fact.values]
