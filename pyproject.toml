@@ -17,6 +17,12 @@ dependencies = [
 #   uv pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cu128
 # Same pin on Windows dev box and RunPod image (see track_a/docs/RUNPOD.md).
 
+# Explicit package discovery: only `track_a` is a Python package. Without this,
+# setuptools flat-layout auto-discovery sees both `configs/` and `track_a/`
+# and refuses to build (breaks `pip install -e .` on the RunPod pod).
+[tool.setuptools.packages.find]
+include = ["track_a*"]
+
 [tool.pytest.ini_options]
 testpaths = ["track_a/tests"]
 addopts = "-q"
