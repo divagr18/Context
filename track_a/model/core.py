@@ -83,6 +83,7 @@ class Transformer(nn.Module):
 
         bundle = AuxBundle(
             layer_attn=tuple(aux_probs) if self.cfg.aux_enabled else None,
+            aux_hidden=x if self.cfg.aux_enabled else None,
         )
         return logits, bundle
 

@@ -106,11 +106,18 @@ class ModelConfig:
 class AuxBundle:
     """Side-channel output of Transformer.forward (contract C7).
 
-    WARNING: when populated, layer_attn holds (B, n_heads, T, T) tensors;
-    aux_enabled is only for short diagnostic sequences (T <= 2048).
+    WARNING: when populated, layer_attn holds (B, n_heads, T, T) tensors and
+    aux_hidden holds a (B, T, d_model) tensor; aux_enabled is only for short
+    diagnostic/aux-loss sequences (T <= 2048).
+
+    ``layer_attn``: attention-prob tensors for the LAST ceil(n_layers/3)
+    layers (ordered by ``cfg.aux_layer_indices()``), or None.
+    ``aux_hidden``: final-norm hidden states (B, T, d_model), or None. Used
+    by the probe-style aux losses (temporal/negation/salience).
     """
 
     layer_attn: Optional[tuple[torch.Tensor, ...]] = field(default=None)
+    aux_hidden: Optional[torch.Tensor] = field(default=None)
 
 
 def _config_from_mapping(raw: dict[str, Any]) -> ModelConfig:
