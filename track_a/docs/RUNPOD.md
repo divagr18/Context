@@ -44,6 +44,15 @@ Same torch pin on Windows dev and Linux pods = zero win-dev/linux-run drift
 bash scripts/runpod_entry.sh configs/train_tiny.yaml
 ```
 
+G0 LR-pick (PLAN 7): run both, pick the winner by best `val/ce` (printed as
+`[val]` lines and in the run's TensorBoard), then reuse that LR for the G1
+grid:
+
+```bash
+bash scripts/runpod_entry.sh configs/train_g0_lr3e-4.yaml
+bash scripts/runpod_entry.sh configs/train_g0_lr6e-4.yaml
+```
+
 The entrypoint: pins-checks torch, regenerates all four shard sets from the
 committed split configs (deterministic; ~$0.25 CPU per pod, PLAN 5.2),
 trains, then runs the eval battery on best/final checkpoint and writes
