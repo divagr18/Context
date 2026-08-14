@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+data/
+runs/
+logs/
+*.egg-info/
+.codegraph/
+*.pt
+*.ckpt
+*.bin
+.torch_install.log
+.torch_install.err.log
