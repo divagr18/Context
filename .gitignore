@@ -14,3 +14,4 @@ logs/
 *.bin
 .torch_install.log
 .torch_install.err.log
+.omo/
