@@ -1,0 +1,66 @@
+{
+  "by_type": {
+    "exact_value": [
+      "What {attribute} is marked for {entity} on the yard board?",
+      "Show me the {attribute} on the manifest for {entity}.",
+      "Which {attribute} is stamped on {entity} in the dock log?"
+    ],
+    "relational": [
+      "Which unit {relation} {entity_b} on the freight board?",
+      "Name the entity with a {relation} bond to {entity_b}.",
+      "What operation {relation} {entity_b} according to dispatch?"
+    ],
+    "state_transition_current": [
+      "What is the current {attribute} of {entity} after the reassignment?",
+      "After the last switch, what {attribute} does {entity} show on the board?",
+      "What {attribute} is {entity} tagged with following the latest update?"
+    ],
+    "state_transition_prior": [
+      "Before the latest switch, what {attribute} did {entity} carry?",
+      "What was the earlier {attribute} of {entity} before the re-tag?",
+      "Which {attribute} was logged for {entity} prior to the changeover?"
+    ],
+    "negative": [
+      "Was a {attribute} ever issued for {entity} at the gate?",
+      "Does {entity} have a {attribute} on the customs ledger?",
+      "Has any {attribute} been cleared for {entity}?"
+    ],
+    "uncertainty_hedge": [
+      "What tentative {attribute} is on record for {entity}?",
+      "What unverified {attribute} has been noted for {entity}?",
+      "Which {attribute} is provisionally listed for {entity}?"
+    ],
+    "uncertainty_conflict": [
+      "Is the {attribute} of {entity} settled on the manifest?",
+      "Has the {attribute} of {entity} been confirmed across all records?",
+      "Was the disputed {attribute} on {entity} ever resolved?"
+    ],
+    "binding": [
+      "When {entity} was first logged at intake, what value was assigned?",
+      "At registration, the entity {entity} received what initial value?",
+      "The intake record for {entity} shows what starting value?"
+    ],
+    "multihop_owns_attr": [
+      "Which entity has {attribute} listed as {value} on the board?",
+      "Identify the unit whose {attribute} reads {value}.",
+      "What unit is tagged with {attribute} of {value}?"
+    ],
+    "multihop_superseded_owner": [
+      "Which entity formerly held {attribute} as {old_value} before the override?",
+      "Before the re-tag, which unit carried {attribute} of {old_value}?",
+      "The entity that previously bore {attribute} of {old_value}, who was it?"
+    ]
+  },
+  "answers": {
+    "exact_value": "{value}",
+    "relational": "{entity_a}",
+    "state_transition_current": "{value}",
+    "state_transition_prior": "{old_value}",
+    "negative": "denied",
+    "uncertainty_hedge": "unconfirmed:{value}",
+    "uncertainty_conflict": "unresolved",
+    "binding": "{value}",
+    "multihop_owns_attr": "{entity_a}",
+    "multihop_superseded_owner": "{entity_a}"
+  }
+}

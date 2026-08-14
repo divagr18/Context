@@ -1,0 +1,53 @@
+{
+  "person_names": [
+    "Aaron Voss", "Beatrice Lin", "Carlos Mendez", "Daphne Kowalski",
+    "Emil Sato", "Freya Okonkwo", "Gustaf Nilsson", "Hana Bergstrom",
+    "Ian Choudhury", "Julia Frost", "Kenji Takeda", "Lena Marchetti",
+    "Marcus Webb", "Naomi Asante", "Oliver Strand", "Petra Novak",
+    "Quinn Hollister", "Reuben Katz", "Signe Dahl", "Tariq Farouk",
+    "Uma Patel", "Viktor Lund", "Wendy Torres", "Xander Pike",
+    "Yuki Hamada", "Zara Whitfield", "Aiden Cross", "Brianna Cole",
+    "Cyrus Vance", "Dina Romero", "Elias Burke", "Fiona Reyes",
+    "Grant Avery", "Harper Quinn", "Ivan Sokolov", "Jada Osei",
+    "Kyle Fontaine", "Lila Brennan", "Miles Harper", "Nadia Volkov",
+    "Oscar Vega", "Priya Sen", "Ramon Diaz", "Sasha Kim"
+  ],
+  "org_names": [
+    "Argus", "Bifrost", "Catalyst", "Dataweave", "Emberline",
+    "Fluxgrid", "Greymatter", "Halcyon", "Ironveil", "Jetstream",
+    "Kinetic", "Lattice", "Mindforge", "Nimrod", "Orbital",
+    "Pulsewave", "Quartznet", "Radiant", "Skyforge", "Tidepool",
+    "Umbrage", "Vortex", "Wavelength", "Xenith", "Yggdrasil",
+    "Zenith", "Aperture", "Beacon", "Cipher", "Dynamo",
+    "Echelon", "Fusion", "Glyph", "Horizon", "Ingot",
+    "Junction", "Keystone", "Lantern", "Monolith", "Nexus",
+    "Obsidian", "Parallax", "Quorum", "Riviera"
+  ],
+  "sources": [
+    "internal audit", "release notes", "incident postmortem",
+    "weekly standup", "team retrospective", "architecture review",
+    "sprint demo", "design document", "vendor advisory"
+  ],
+  "filler_teams": [
+    "Backend Core", "Platform Ops", "Frontend Guild", "Security Detail",
+    "Data Pipeline", "Release Engineering", "Cloud Infrastructure",
+    "QA Automation", "Documentation Squad", "API Gateway", "Identity Team",
+    "Performance Lab", "Observability Crew"
+  ],
+  "attributes_by_family": {
+    "EXACT-01": {
+      "port": {"values": ["8080", "9200", "5432", "6379", "3000", "8443", "27017", "9090", "4430", "8000", "7777", "5050"]},
+      "version": {"values": ["v2.3.1", "v4.0.0-rc1", "v1.12.8", "v3.7.2", "v5.1.0", "v2.9.4", "v0.8.1", "v7.3.0", "v1.0.5", "v6.2.3", "v3.1.9", "v8.0.0-beta"]},
+      "deadline": {"values": ["2047-03-14", "2047-06-01", "2046-12-20", "2047-01-15", "2047-09-30", "2046-11-01", "2047-04-22", "2047-07-08", "2046-10-15", "2047-02-28", "2047-08-15", "2047-05-10"]},
+      "ticket_id": {"values": ["TKT-8841", "TKT-3209", "TKT-5567", "TKT-1024", "TKT-7701", "TKT-4438", "TKT-9912", "TKT-2256", "TKT-6683", "TKT-8890", "TKT-3345", "TKT-7712"]}
+    },
+    "EXACT-02": {
+      "file_path": {"values": ["/ops/halcyon/gate.yaml", "/src/auth/config.toml", "/deploy/staging/manifest.json", "/lib/core/registry.rs", "/tests/integration/smoke.py", "/conf/metrics/exporter.yaml", "/infra/terraform/main.tf", "/docs/changelog/v4.md", "/pkg/handler/router.go", "/ci/pipeline/build.sh", "/var/log/app/trace.log", "/etc/service/env.prod"]},
+      "budget_amount": {"values": ["$4.2M", "$1.8M", "$550K", "$12.5M", "$900K", "$3.1M", "$780K", "$8.4M", "$2.6M", "$450K", "$6.3M", "$1.1M"]}
+    }
+  },
+  "relations": {
+    "REL-01": ["depends_on", "owns", "manages", "feeds_into", "replaced", "monitors", "integrates_with"],
+    "REL-02": ["reports_to", "delegates_to", "supersedes", "triggers", "authenticates", "caches_for", "routes_to"]
+  }
+}

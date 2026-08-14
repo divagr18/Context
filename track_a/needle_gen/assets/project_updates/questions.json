@@ -1,0 +1,66 @@
+{
+  "by_type": {
+    "exact_value": [
+      "What is the {attribute} of {entity}?",
+      "Tell me the current {attribute} assigned to {entity}.",
+      "Which {attribute} does {entity} hold right now?"
+    ],
+    "relational": [
+      "Which entity {relation} {entity_b}?",
+      "Name the entity that has a {relation} connection to {entity_b}.",
+      "What links to {entity_b} through a {relation} relationship?"
+    ],
+    "state_transition_current": [
+      "What is the current {attribute} of {entity} after the change?",
+      "After all updates, what {attribute} does {entity} have now?",
+      "What is the latest {attribute} of {entity} following the transition?"
+    ],
+    "state_transition_prior": [
+      "What was the {attribute} of {entity} before it was changed?",
+      "Prior to the latest transition, what was the {attribute} of {entity}?",
+      "What was the earlier {attribute} on {entity} before the update?"
+    ],
+    "negative": [
+      "Does {entity} have a confirmed {attribute}?",
+      "Is there a valid {attribute} recorded for {entity}?",
+      "Was a {attribute} ever established for {entity}?"
+    ],
+    "uncertainty_hedge": [
+      "What {attribute} has been tentatively reported for {entity}?",
+      "According to available sources, what is the unconfirmed {attribute} of {entity}?",
+      "What unverified {attribute} is noted for {entity}?"
+    ],
+    "uncertainty_conflict": [
+      "Has the {attribute} of {entity} been resolved?",
+      "Is there a definitive {attribute} for {entity}?",
+      "Was the conflicting {attribute} on {entity} ever settled?"
+    ],
+    "binding": [
+      "When {entity} was first introduced, what value did it receive?",
+      "The entity {entity} was registered with what initial value?",
+      "At creation time, what attribute was set for {entity}?"
+    ],
+    "multihop_owns_attr": [
+      "Which entity has the {attribute} set to {value}?",
+      "Identify the entity whose {attribute} equals {value}.",
+      "What is the name of the entity with {attribute} of {value}?"
+    ],
+    "multihop_superseded_owner": [
+      "Which entity previously had a {attribute} of {old_value} before it was superseded?",
+      "Before the override, which entity carried {attribute} as {old_value}?",
+      "The entity that formerly held {attribute} as {old_value}, who was it?"
+    ]
+  },
+  "answers": {
+    "exact_value": "{value}",
+    "relational": "{entity_a}",
+    "state_transition_current": "{value}",
+    "state_transition_prior": "{old_value}",
+    "negative": "denied",
+    "uncertainty_hedge": "unconfirmed:{value}",
+    "uncertainty_conflict": "unresolved",
+    "binding": "{value}",
+    "multihop_owns_attr": "{entity_a}",
+    "multihop_superseded_owner": "{entity_a}"
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "person_names": [
+    "Salma Qureshi", "Bernard Okafor", "Chioma Eze", "Derek Fawehinmi",
+    "Elisabet Sorensen", "Farid Haddad", "Greta Lindqvist", "Hector Bello",
+    "Imani Diallo", "Jorgen Steen", "Kwame Mensah", "Leila Farahani",
+    "Magnus Holm", "Nneka Adeyemi", "Odysseas Papas", "Pilar Mendoza",
+    "Rashid Alawi", "Sanna Virtanen", "Temba Ndlovu", "Ulrich Brandt",
+    "Valentina Cruz", "Waldo Meireles", "Xola Dlamini", "Yara Khoury",
+    "Zainab Osman", "Axel Rydberg", "Bruna Costa", "Chen Wei",
+    "Dalia Moreno", "Einar Haugen", "Fatima Zahra", "Giorgio Bianchi",
+    "Halima Yusuf", "Igor Petrov", "Jasmin Tan", "Kofi Abeka",
+    "Leila Nazari", "Manuel Silva", "Naima Hassan", "Obi Nwosu",
+    "Pavla Novotna", "Rania Farid", "Sven Lindberg", "Taiwo Balogun"
+  ],
+  "org_names": [
+    "Apex Freight", "Bayline Haul", "Crestpoint Logistics",
+    "Dockyard Central", "Eastwind Carriers", "Fairgate Shipping",
+    "Gulfstream Cargo", "Harbormark Transit", "Ironclad Transport",
+    "Jetty Haulage", "Kestrel Lines", "Lakeshore Depot",
+    "Meridian Shipping", "Northpoint Freight", "Oceanreach Carriers",
+    "Pierpoint Terminal", "Quayside Logistics", "Ridgeline Transport",
+    "Seabound Carriers", "Tidewatch Depot", "Upstream Haul",
+    "Vanguard Freight", "Wharfside Transit", "Crosscurrent Lines",
+    "Yardmark Shipping", "Anchorbay Logistics", "Bluecrest Carriers",
+    "Compass Freight", "Deepwater Terminal", "Eastpoint Depot",
+    "Fjordside Transport", "Gatehouse Shipping", "Highseas Carriers",
+    "Inland Haul", "Jetty Freight", "Keelhaul Terminal",
+    "Longshore Logistics", "Midport Carriers", "Narrowside Transit",
+    "Outbound Freight", "Portlink Depot", "Quartermile Shipping",
+    "Riverrun Carriers", "Southbay Terminal"
+  ],
+  "sources": [
+    "customs ledger", "bill of lading", "dock master",
+    "fleet manifest", "yard inspector", "port authority",
+    "gate supervisor", "warehouse foreman", "cargo surveyor"
+  ],
+  "filler_teams": [
+    "Inbound Crew", "Outbound Gang", "Yard Marshals", "Customs Detail",
+    "Stowage Squad", "Gate Control", "Fleet Dispatch", "Pier Watch",
+    "Loading Team", "Seal Check Unit", "Ramp Operations",
+    "Hold Inspection", "Manifest Office"
+  ],
+  "attributes_by_family": {
+    "EXACT-01": {
+      "berth_number": {"values": ["B-01", "B-02", "B-17", "B-23", "B-09", "B-31", "B-14", "B-06", "B-28", "B-11", "B-35", "B-42"]},
+      "container_id": {"values": ["MSCU-4482100", "CMAU-7710234", "HLCU-9967531", "TCLU-2208417", "EISU-5539106", "OOLU-8834702", "MSKU-3319850", "HLXU-6602918", "CCLU-1174643", "TCNU-7758290", "GESU-4401326", "EVGU-8893045"]},
+      "eta_date": {"values": ["2047-03-17", "2047-06-22", "2046-11-30", "2047-01-08", "2047-09-15", "2047-04-03", "2046-12-18", "2047-07-27", "2047-02-14", "2047-05-19", "2046-10-25", "2047-08-11"]},
+      "weight_kg": {"values": ["18500kg", "42750kg", "7200kg", "31000kg", "56800kg", "12400kg", "28900kg", "9300kg", "44600kg", "16700kg", "38200kg", "5150kg"]}
+    },
+    "EXACT-02": {
+      "customs_code": {"values": ["HS-8471.30", "HS-8517.62", "HS-6109.10", "HS-3923.21", "HS-9403.60", "HS-7308.90", "HS-8544.42", "HS-2905.31", "HS-8714.10", "HS-4818.10", "HS-9503.00", "HS-6404.11"]},
+      "route_id": {"values": ["RT-201:NA-EU", "RT-445:APAC-LATAM", "RT-088:EU-MEA", "RT-312:NA-APAC", "RT-567:LATAM-EU", "RT-723:MEA-APAC", "RT-156:NA-LATAM", "RT-891:EU-APAC", "RT-634:APAC-NA", "RT-278:MEA-EU", "RT-402:LATAM-APAC", "RT-519:NA-MEA"]},
+      "manifest_ref": {"values": ["MF-2047-A3301", "MF-2047-B7720", "MF-2046-C1184", "MF-2047-D4590", "MF-2047-E8823", "MF-2046-F2917", "MF-2047-G6634", "MF-2047-H0051", "MF-2046-I4478", "MF-2047-J3362", "MF-2047-K7705", "MF-2046-L1249"]}
+    }
+  },
+  "relations": {
+    "REL-01": ["consigns_to", "berths_at", "hauls_for", "clears_via", "dispatches_to", "stows_aboard", "tows_from"],
+    "REL-02": ["discharges_to", "originates_at", "transships_through", "handsoff_to", "bonds_with", "seals_for", "routes_via"]
+  }
+}

@@ -1,0 +1,229 @@
+{
+  "domain": "project_updates",
+  "families": [
+    {
+      "family_id": "FILL-01",
+      "fact_type": "filler",
+      "slots": ["team"],
+      "carries_fact": false,
+      "paraphrases": [
+        "The {team} convened for their weekly sync session.",
+        "Members of {team} gathered in the main conference room today.",
+        "A regular check-in took place among the {team} group this morning.",
+        "Everyone on {team} logged into the stand-up call on schedule.",
+        "Today's session brought {team} together for an open discussion.",
+        "The {team} folks reviewed their current priorities once more.",
+        "As usual, {team} opened the floor to brief status updates.",
+        "Collaboration continued as {team} met for afternoon planning."
+      ]
+    },
+    {
+      "family_id": "FILL-02",
+      "fact_type": "filler",
+      "slots": ["project"],
+      "carries_fact": false,
+      "paraphrases": [
+        "Progress on {project} moved forward steadily this week.",
+        "The {project} initiative entered its next phase without delay.",
+        "Work continued on {project} without any major interruptions.",
+        "Stakeholders noted ongoing momentum within {project} efforts.",
+        "Development efforts on {project} picked up noticeable pace.",
+        "The {project} roadmap received a routine quarterly update.",
+        "Teams aligned around the latest {project} milestones today.",
+        "Planning sessions addressed several upcoming {project} deadlines."
+      ]
+    },
+    {
+      "family_id": "FILL-03",
+      "fact_type": "filler",
+      "slots": ["person", "team"],
+      "carries_fact": false,
+      "paraphrases": [
+        "{person} joined a planning session with {team} this week.",
+        "Working alongside {team}, {person} shared recent findings.",
+        "A brief sync between {person} and {team} took place on Monday.",
+        "{team} welcomed {person} to the weekly review meeting.",
+        "{person} contributed detailed notes during the {team} meeting.",
+        "Collaboration between {person} and {team} continued smoothly.",
+        "During today's standup, {person} updated {team} on progress.",
+        "{team} and {person} coordinated on several open action items."
+      ]
+    },
+    {
+      "family_id": "FILL-04",
+      "fact_type": "filler",
+      "slots": ["project", "person"],
+      "carries_fact": false,
+      "paraphrases": [
+        "{person} reviewed the latest changes to {project} last night.",
+        "Contributions from {person} shaped the direction of {project}.",
+        "The {project} codebase received several updates from {person}.",
+        "{person} spent the afternoon focused on {project} tasks.",
+        "Work by {person} on {project} proceeded on schedule today.",
+        "New design input from {person} guided {project} decisions forward.",
+        "{person} wrapped up their assigned tasks for {project}.",
+        "Attention from {person} kept {project} moving ahead of milestones."
+      ]
+    },
+    {
+      "family_id": "EXACT-01",
+      "fact_type": "exact_value",
+      "slots": ["entity", "attribute", "value"],
+      "carries_fact": true,
+      "paraphrases": [
+        "The {entity} currently has {attribute} set to {value}.",
+        "For {entity}, the {attribute} stands at {value} as of today.",
+        "{entity} reports its {attribute} as {value} in the logs.",
+        "The current {attribute} on {entity} reads {value}.",
+        "We confirmed that {entity} uses {attribute} of {value}.",
+        "According to records, {attribute} for {entity} stands at {value}.",
+        "{value} is the assigned {attribute} for {entity}.",
+        "The {attribute} configured on {entity} is {value}."
+      ]
+    },
+    {
+      "family_id": "EXACT-02",
+      "fact_type": "exact_value",
+      "slots": ["entity", "attribute", "value"],
+      "carries_fact": true,
+      "paraphrases": [
+        "{entity}'s {attribute} was documented as {value} last cycle.",
+        "The {attribute} field for {entity} now holds {value}.",
+        "Records show {entity} with {attribute} equal to {value}.",
+        "As specified, the {attribute} of {entity} equals {value}.",
+        "{value} represents the {attribute} associated with {entity}.",
+        "On the {entity} side, {attribute} evaluates to {value}.",
+        "The {attribute} listed under {entity} is {value}.",
+        "{entity} carries the {attribute} designation of {value}."
+      ]
+    },
+    {
+      "family_id": "REL-01",
+      "fact_type": "relational",
+      "slots": ["entity_a", "relation", "entity_b"],
+      "carries_fact": true,
+      "paraphrases": [
+        "{entity_a} {relation} {entity_b}.",
+        "{entity_b} is the target of a {relation} action from {entity_a}.",
+        "The relationship is that {entity_a} {relation} {entity_b} currently.",
+        "{entity_a} has been noted to {relation} {entity_b} per audit.",
+        "A recent check confirmed {entity_a} {relation} {entity_b}.",
+        "According to the latest review, {entity_a} {relation} {entity_b}.",
+        "Records show that {entity_a} {relation} {entity_b} as of this cycle.",
+        "{entity_a} continues to {relation} {entity_b} as documented."
+      ]
+    },
+    {
+      "family_id": "REL-02",
+      "fact_type": "relational",
+      "slots": ["entity_a", "relation", "entity_b"],
+      "carries_fact": true,
+      "paraphrases": [
+        "There is a documented link where {entity_a} {relation} {entity_b}.",
+        "{entity_b} receives action from {entity_a} through a {relation} binding.",
+        "The team observed that {entity_a} {relation} {entity_b} this sprint.",
+        "It is confirmed that {entity_a} {relation} {entity_b}.",
+        "{entity_a} maintains a tie that {relation} {entity_b}.",
+        "As of the current status, {entity_a} {relation} {entity_b}.",
+        "Mapping notes indicate {entity_a} {relation} {entity_b} on the board.",
+        "{entity_a} was found to {relation} {entity_b} during the audit."
+      ]
+    },
+    {
+      "family_id": "STATE-01",
+      "fact_type": "state_transition",
+      "slots": ["entity", "attribute", "old_value", "new_value"],
+      "carries_fact": true,
+      "paraphrases": [
+        "The {attribute} of {entity} changed from {old_value} to {new_value}.",
+        "{entity} updated its {attribute}, replacing {old_value} with {new_value}.",
+        "A transition occurred: {entity} {attribute} moved from {old_value} to {new_value}.",
+        "{entity} now uses {new_value} for {attribute}, which was previously {old_value}.",
+        "The {attribute} on {entity} shifted, going from {old_value} to {new_value}.",
+        "Previously {old_value}, the {attribute} for {entity} has been set to {new_value}.",
+        "{new_value} replaced {old_value} as the {attribute} of {entity}.",
+        "An update to {entity} changed {attribute} from {old_value} over to {new_value}."
+      ]
+    },
+    {
+      "family_id": "NEG-01",
+      "fact_type": "negative",
+      "slots": ["entity", "attribute"],
+      "carries_fact": true,
+      "paraphrases": [
+        "The {attribute} for {entity} was denied by the review board.",
+        "{entity} does not have a confirmed {attribute} at present.",
+        "There is no valid {attribute} on {entity} in current records.",
+        "Requests for {entity} {attribute} were rejected outright.",
+        "No {attribute} exists for {entity} at this time.",
+        "{entity} was found to lack any {attribute} during inspection.",
+        "The {attribute} of {entity} could not be verified by the team.",
+        "It was determined that {entity} has no {attribute} on file."
+      ]
+    },
+    {
+      "family_id": "UNRES-01",
+      "fact_type": "uncertainty_hedge",
+      "slots": ["source", "entity", "attribute", "value"],
+      "carries_fact": true,
+      "paraphrases": [
+        "According to {source}, the {attribute} of {entity} may be {value}.",
+        "{source} suggests that {entity} {attribute} is possibly {value}.",
+        "If {source} is correct, {entity} has {attribute} of {value}, though unconfirmed.",
+        "Reports from {source} indicate {entity} {attribute} might equal {value}.",
+        "{source} tentatively lists the {attribute} of {entity} as {value}.",
+        "Per {source}, there is a chance that {entity} {attribute} reads {value}.",
+        "The claim that {entity} {attribute} is {value} comes from {source} and remains hedged.",
+        "{source} notes {value} as a possible {attribute} for {entity}, pending confirmation."
+      ]
+    },
+    {
+      "family_id": "UNRES-02",
+      "fact_type": "uncertainty_conflict",
+      "slots": ["source", "entity", "attribute", "value"],
+      "carries_fact": true,
+      "paraphrases": [
+        "{source} reports the {attribute} of {entity} as {value}.",
+        "According to {source}, {entity} has {attribute} set to {value}.",
+        "{source} states that {value} is the {attribute} for {entity}.",
+        "The {source} listing shows {entity} {attribute} equals {value}.",
+        "{source} claims {entity} {attribute} stands at {value}.",
+        "As per {source}, the recorded {attribute} of {entity} is {value}.",
+        "{source} lists {value} as the {attribute} on {entity}.",
+        "Documentation from {source} gives {entity} {attribute} of {value}."
+      ]
+    },
+    {
+      "family_id": "BIND-01",
+      "fact_type": "binding_intro",
+      "slots": ["entity", "entity_type", "attribute", "value"],
+      "carries_fact": true,
+      "paraphrases": [
+        "A new {entity_type} called {entity} was registered with {attribute} set to {value}.",
+        "The {entity_type} {entity} has been introduced, carrying {attribute} of {value}.",
+        "{entity}, a {entity_type}, entered the system with {attribute} at {value}.",
+        "Registration complete: {entity_type} {entity}, initial {attribute} is {value}.",
+        "We onboarded the {entity_type} {entity}, which has {attribute} equal to {value}.",
+        "The {entity_type} known as {entity} appeared with {attribute} of {value}.",
+        "A {entity_type} named {entity} was created, its {attribute} set to {value}.",
+        "Setup finalized: {entity_type} {entity} with {attribute} = {value}."
+      ]
+    },
+    {
+      "family_id": "BIND-02",
+      "fact_type": "binding_reference",
+      "slots": ["entity", "attribute", "new_value"],
+      "carries_fact": true,
+      "paraphrases": [
+        "The {attribute} for {entity} has been updated to {new_value}.",
+        "{entity} now shows {attribute} as {new_value} in the latest record.",
+        "An adjustment gave {entity} a {attribute} of {new_value}.",
+        "The current {attribute} on {entity} reads {new_value}.",
+        "{new_value} is the revised {attribute} assigned to {entity}.",
+        "Following the change, {entity} carries {attribute} of {new_value}.",
+        "{entity} had its {attribute} modified to {new_value} recently.",
+        "A revision set the {attribute} of {entity} to {new_value}."
+      ]
+    }
+  ]
+}

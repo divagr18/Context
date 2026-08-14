@@ -1,0 +1,229 @@
+{
+  "domain": "logistics_ops",
+  "families": [
+    {
+      "family_id": "FILL-01",
+      "fact_type": "filler",
+      "slots": ["team"],
+      "carries_fact": false,
+      "paraphrases": [
+        "The {team} crew assembled at the loading bay at dawn.",
+        "Dockworkers from {team} started the morning shift on time.",
+        "A briefing was held for the {team} squad on the warehouse floor.",
+        "All hands on {team} reported for today's dispatch rotation.",
+        "The {team} unit gathered to review shipment manifests before noon.",
+        "{team} held a pre-dawn lineup before the freight gates opened.",
+        "Members of {team} signed in at the terminal for this shift.",
+        "The {team} gang coordinated around the day's cargo schedule."
+      ]
+    },
+    {
+      "family_id": "FILL-02",
+      "fact_type": "filler",
+      "slots": ["project"],
+      "carries_fact": false,
+      "paraphrases": [
+        "Operations along {project} proceeded on schedule today.",
+        "The {project} corridor saw steady freight movement all day.",
+        "Cargo flow through {project} remained uninterrupted this week.",
+        "Dispatch logs show {project} running at full capacity now.",
+        "The {project} lane handled increased volume this period.",
+        "Supervisors reviewed throughput on the {project} route today.",
+        "Freight along {project} cleared customs without notable delay.",
+        "Today's tally shows {project} ahead of its weekly throughput target."
+      ]
+    },
+    {
+      "family_id": "FILL-03",
+      "fact_type": "filler",
+      "slots": ["person", "team"],
+      "carries_fact": false,
+      "paraphrases": [
+        "{person} coordinated with {team} at the receiving dock today.",
+        "The {team} crew took direction from {person} this shift.",
+        "During the manifest review, {person} and {team} compared notes.",
+        "{team} followed instructions from {person} for the outbound load.",
+        "Briefing led by {person}, attended by {team} on the cargo ramp.",
+        "{person} walked {team} through the stowage plan for tonight.",
+        "{team} and {person} resolved a mislabeled pallet on deck four.",
+        "At the freight yard, {person} and {team} verified trailer seals."
+      ]
+    },
+    {
+      "family_id": "FILL-04",
+      "fact_type": "filler",
+      "slots": ["project", "person"],
+      "carries_fact": false,
+      "paraphrases": [
+        "{person} oversaw operations along {project} this afternoon.",
+        "Freight moving through {project} was signed off by {person}.",
+        "{person} cleared the last outbound trailer on the {project} route.",
+        "Inspection duties on {project} fell to {person} during this shift.",
+        "{person} logged all cargo exceptions for the {project} run today.",
+        "Supervision of {project} shifted to {person} mid-shift.",
+        "{person} finalized the stowage manifest for the {project} corridor.",
+        "Dispatch authority on {project} was delegated to {person} this week."
+      ]
+    },
+    {
+      "family_id": "EXACT-01",
+      "fact_type": "exact_value",
+      "slots": ["entity", "attribute", "value"],
+      "carries_fact": true,
+      "paraphrases": [
+        "{entity} holds {attribute} at {value} on the yard board.",
+        "The listed {attribute} for {entity} stands at {value}.",
+        "Cargo manifest shows {entity} with {attribute} of {value}.",
+        "According to the dock log, {entity} {attribute} reads {value}.",
+        "The {attribute} marked on {entity} is {value} as per records.",
+        "Dispatch records note {entity} {attribute} as {value} today.",
+        "Current {attribute} for {entity}: {value}.",
+        "{entity} displays {attribute} tagged as {value} on the ledger."
+      ]
+    },
+    {
+      "family_id": "EXACT-02",
+      "fact_type": "exact_value",
+      "slots": ["entity", "attribute", "value"],
+      "carries_fact": true,
+      "paraphrases": [
+        "{value} is the {attribute} recorded against {entity}.",
+        "The freight ledger lists {entity} {attribute} at {value}.",
+        "Tracking shows {entity} with a {attribute} of {value}.",
+        "{entity} carries the {attribute} label {value} in the system.",
+        "On the customs declaration, {entity} {attribute} is {value}.",
+        "The {attribute} field tied to {entity} holds {value} currently.",
+        "Warehouse logs confirm {entity} {attribute} equals {value}.",
+        "The {attribute} of {entity} was logged as {value} at intake."
+      ]
+    },
+    {
+      "family_id": "REL-01",
+      "fact_type": "relational",
+      "slots": ["entity_a", "relation", "entity_b"],
+      "carries_fact": true,
+      "paraphrases": [
+        "{entity_a} {relation} {entity_b}.",
+        "Freight records show {entity_a} {relation} {entity_b}.",
+        "The dispatch board lists {entity_a} as one that {relation} {entity_b}.",
+        "Customs clearance ties {entity_a} to {entity_b} via a {relation} bond.",
+        "{entity_a} was tagged to {relation} {entity_b} on the yard chart.",
+        "The route plan has {entity_a} set to {relation} {entity_b}.",
+        "A {relation} bond was stamped between {entity_a} and {entity_b}.",
+        "Warehouse records confirm: {entity_a} {relation} {entity_b}."
+      ]
+    },
+    {
+      "family_id": "REL-02",
+      "fact_type": "relational",
+      "slots": ["entity_a", "relation", "entity_b"],
+      "carries_fact": true,
+      "paraphrases": [
+        "Tracing the haul path, {entity_a} {relation} {entity_b}.",
+        "On the load sheet, {entity_a} {relation} {entity_b} today.",
+        "The berth schedule shows {entity_a} {relation} {entity_b}.",
+        "Tracking the consignment, {entity_a} {relation} {entity_b}.",
+        "A {relation} tag links {entity_a} with {entity_b} on the manifest.",
+        "Bill of lading confirms {entity_a} {relation} {entity_b}.",
+        "The transfer log marks {entity_a} so it {relation} {entity_b}.",
+        "Dock operations note that {entity_a} {relation} {entity_b}."
+      ]
+    },
+    {
+      "family_id": "STATE-01",
+      "fact_type": "state_transition",
+      "slots": ["entity", "attribute", "old_value", "new_value"],
+      "carries_fact": true,
+      "paraphrases": [
+        "The {attribute} for {entity} shifted from {old_value} to {new_value}.",
+        "Yard update: {entity} {attribute} went from {old_value} over to {new_value}.",
+        "{entity} was reassigned, {attribute} transitioning {old_value} to {new_value}.",
+        "A change was logged: {entity} {attribute} now reads {new_value}, formerly {old_value}.",
+        "The berth master shows {entity} {attribute} moved from {old_value} to {new_value}.",
+        "{new_value} replaced {old_value} as the {attribute} for {entity}.",
+        "{entity} had its {attribute} altered from {old_value} toward {new_value}.",
+        "The freight board reflects a change on {entity}: {attribute} was {old_value}, now {new_value}."
+      ]
+    },
+    {
+      "family_id": "NEG-01",
+      "fact_type": "negative",
+      "slots": ["entity", "attribute"],
+      "carries_fact": true,
+      "paraphrases": [
+        "No {attribute} was issued for {entity} at the gate.",
+        "The {attribute} on {entity} was rejected at customs inspection.",
+        "{entity} carries no valid {attribute} in the current manifest.",
+        "Customs flagged {entity} as lacking a {attribute}.",
+        "The {attribute} claim for {entity} was dismissed by the surveyor.",
+        "There is no {attribute} on record for {entity} at this time.",
+        "{entity} has no assigned {attribute} according to the dock log.",
+        "The {attribute} for {entity} could not be confirmed at intake."
+      ]
+    },
+    {
+      "family_id": "UNRES-01",
+      "fact_type": "uncertainty_hedge",
+      "slots": ["source", "entity", "attribute", "value"],
+      "carries_fact": true,
+      "paraphrases": [
+        "Per {source}, the {attribute} of {entity} might be {value}.",
+        "{source} indicates {entity} {attribute} could read {value}.",
+        "If {source} is to be believed, {entity} holds {attribute} of {value}.",
+        "A tentative note from {source} gives {entity} {attribute} as {value}.",
+        "{source} flags {value} as a tentative {attribute} for {entity}.",
+        "The {source} dispatch sheet suggests {entity} {attribute} may stand at {value}.",
+        "Hedged by {source}, {entity} is said to carry {attribute} of {value}.",
+        "{source} lists {value} as an unverified {attribute} for {entity}."
+      ]
+    },
+    {
+      "family_id": "UNRES-02",
+      "fact_type": "uncertainty_conflict",
+      "slots": ["source", "entity", "attribute", "value"],
+      "carries_fact": true,
+      "paraphrases": [
+        "{source} logs the {attribute} of {entity} as {value}.",
+        "The {source} manifest shows {entity} {attribute} at {value}.",
+        "According to {source}, {entity} carries {attribute} of {value}.",
+        "{source} records {value} as the {attribute} for {entity}.",
+        "The {source} entry gives {entity} a {attribute} reading of {value}.",
+        "{source} filed {entity} with {attribute} tagged as {value}.",
+        "On the {source} dispatch log, {entity} {attribute} is {value}.",
+        "{source} states the {attribute} on {entity} at {value}."
+      ]
+    },
+    {
+      "family_id": "BIND-01",
+      "fact_type": "binding_intro",
+      "slots": ["entity", "entity_type", "attribute", "value"],
+      "carries_fact": true,
+      "paraphrases": [
+        "A {entity_type} tagged {entity} was logged with {attribute} at {value}.",
+        "The {entity_type} {entity} entered the yard manifest, {attribute} set to {value}.",
+        "Intake recorded the {entity_type} {entity} carrying {attribute} of {value}.",
+        "{entity}, a {entity_type}, was checked in with {attribute} of {value}.",
+        "The dock log added {entity_type} {entity}, its {attribute} marked as {value}.",
+        "Gate entry: {entity_type} {entity} with initial {attribute} of {value}.",
+        "A new {entity_type}, {entity}, was stamped into the ledger with {attribute} of {value}.",
+        "Registration filed for {entity_type} {entity}, {attribute} recorded at {value}."
+      ]
+    },
+    {
+      "family_id": "BIND-02",
+      "fact_type": "binding_reference",
+      "slots": ["entity", "attribute", "new_value"],
+      "carries_fact": true,
+      "paraphrases": [
+        "The {attribute} on {entity} was amended to {new_value}.",
+        "Yard update: {entity} now has {attribute} of {new_value}.",
+        "{entity} had its {attribute} revised to {new_value} after recheck.",
+        "{new_value} was logged as the updated {attribute} for {entity}.",
+        "The manifest reflects {entity} {attribute} changed to {new_value}.",
+        "A correction set {entity} {attribute} to {new_value} on the board.",
+        "Latest entry: {entity} carries {attribute} of {new_value}.",
+        "The {attribute} for {entity} was re-tagged as {new_value}."
+      ]
+    }
+  ]
+}
