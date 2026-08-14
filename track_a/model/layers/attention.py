@@ -25,11 +25,16 @@ def _name_to_enum(name: str):
     }[name]
 
 
-def _probe_backend(name: str) -> bool:
+def _probe_device() -> torch.device:
+    return torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+
+def _probe_backend(name: str, device: torch.device) -> bool:
     try:
         sb = _name_to_enum(name)
         with torch.nn.attention.sdpa_kernel(sb):
-            d = torch.randn(1, 1, 2, 4, device="cpu", dtype=torch.float32)
+            # bf16 probe: cuDNN SDPA rejects fp32 tensors outright.
+            d = torch.randn(1, 1, 8, 32, device=device, dtype=torch.bfloat16)
             F.scaled_dot_product_attention(d, d, d, is_causal=True)
         return True
     except (RuntimeError, Exception):
@@ -46,13 +51,15 @@ def _select_backend(softcap: float | None) -> str:
         return name
     if _BACKEND_CHOSEN is not None:
         return _BACKEND_CHOSEN
+    device = _probe_device()
     for candidate in ("flash", "cudnn", "efficient", "math"):
-        if _probe_backend(candidate):
+        if _probe_backend(candidate, device):
             _BACKEND_CHOSEN = candidate
             break
     else:
         _BACKEND_CHOSEN = "math"
-    print(f"[SDPA] backend={_BACKEND_CHOSEN}", file=sys.stderr, flush=True)
+    print(f"[SDPA] backend={_BACKEND_CHOSEN} (probed on {device})",
+          file=sys.stderr, flush=True)
     return _BACKEND_CHOSEN
 
 

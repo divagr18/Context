@@ -51,11 +51,13 @@ def ce_on_batch(model, batch, use_bf16: bool):
     device = batch.input_ids.device
     with _autocast(use_bf16, device):
         logits, _aux = model(batch.input_ids)
-    logits = logits.float()
-    return F.cross_entropy(
-        logits.reshape(-1, logits.size(-1)), batch.labels.reshape(-1),
-        ignore_index=IGNORE_INDEX,
-    )
+    # Per-row CE: a single fp32 (B*T, vocab) tensor costs ~4 GiB at bs=8 on
+    # the 8GB 4060 and capped the micro-batch; rows keep peaks ~8x lower.
+    parts = [F.cross_entropy(logits[i], batch.labels[i],
+                             ignore_index=IGNORE_INDEX, reduction="sum")
+             for i in range(logits.size(0))]
+    n_tokens = (batch.labels != IGNORE_INDEX).sum().clamp(min=1).float()
+    return torch.stack(parts).sum() / n_tokens
 
 
 def _auto_tune_micro_batch(model, samples, pad_id, device, use_bf16):
@@ -89,8 +91,13 @@ def evaluate(model, val_shards, tok, kind, device, use_bf16, max_samples,
             if i >= max_samples:
                 break
             batch = collate([sample], pad_id, device)
-            total += ce_on_batch(model, batch, use_bf16).item()
-            n += 1
+            try:
+                total += ce_on_batch(model, batch, use_bf16).item()
+                n += 1
+            except torch.cuda.OutOfMemoryError:
+                if device.type == "cuda":
+                    torch.cuda.empty_cache()
+                print(f"[eval] skipped OOM sample {i}", flush=True)
     model.train()
     return total / max(1, n)
 
@@ -145,6 +152,7 @@ def train(cfg_path: str, total_tokens=None, micro_batch=None) -> Path:
     step = 0
     accum_tokens = 0
     accum_count = 0
+    oom_streak = 0
     best_val = float("inf")
     t0 = time.time()
     optimizer.zero_grad(set_to_none=True)
@@ -165,8 +173,31 @@ def train(cfg_path: str, total_tokens=None, micro_batch=None) -> Path:
         if not samples:
             continue
         batch = collate(samples, pad_id, device)
-        ce = ce_on_batch(model, batch, cfg.use_bf16)
-        ce.backward()
+        try:
+            ce = ce_on_batch(model, batch, cfg.use_bf16)
+            ce.backward()
+        except torch.cuda.OutOfMemoryError:
+            # Longer-than-probe sequences can OOM the auto-tuned micro-batch.
+            # Shrink and re-queue; at mb=1 skip the unfittable sample; abort
+            # loudly if the device cannot fit anything at all.
+            model.zero_grad(set_to_none=True)
+            if device.type == "cuda":
+                torch.cuda.empty_cache()
+            if mb > 1:
+                mb //= 2
+                buf[0:0] = items
+                print(f"[oom] step={step} micro_batch shrunk to {mb}",
+                      flush=True)
+                continue
+            oom_streak += 1
+            if oom_streak > 50:
+                raise RuntimeError(
+                    "cannot fit any sample on device: 50 consecutive "
+                    "single-sample OOMs; reduce max_seq or add VRAM")
+            print(f"[oom] step={step} skipped unfittable sample "
+                  f"(seqs={len(samples)})", flush=True)
+            continue
+        oom_streak = 0
         accum_tokens += batch.n_tokens
         accum_count += 1
 
@@ -197,13 +228,16 @@ def train(cfg_path: str, total_tokens=None, micro_batch=None) -> Path:
         step += 1
 
         if step % cfg.log_every == 0:
+            tps = tokens_seen / max(1.0, time.time() - t0)
             logger.scalar("train/ce", ce.item(), step)
             logger.scalar("train/lr", lr, step)
             logger.scalar("train/tokens_seen", tokens_seen, step)
-            logger.scalar("train/tokens_per_sec",
-                          tokens_seen / max(1.0, time.time() - t0), step)
+            logger.scalar("train/tokens_per_sec", tps, step)
             logger.scalar("train/recall_subsample", extra_r, step)
             logger.scalar("train/halluc_frac_subsample", extra_h, step)
+            print(f"[train] step={step} ce={ce.item():.4f} lr={lr:.3e} "
+                  f"tokens_seen={tokens_seen} tok_per_s={tps:.0f} "
+                  f"recall={extra_r:.3f} halluc={extra_h:.3f}", flush=True)
         if cfg.eval_every_steps > 0 and step % cfg.eval_every_steps == 0 \
                 and cfg.val_shards:
             val_ce = evaluate(model, cfg.val_shards, tok, cfg.framing, device,
@@ -214,12 +248,19 @@ def train(cfg_path: str, total_tokens=None, micro_batch=None) -> Path:
                 save_checkpoint(run_root / "best.pt", model, optimizer,
                                 step=step, tokens_seen=tokens_seen,
                                 val_ce=best_val)
+                print(f"[val] step={step} val_ce={val_ce:.4f} new best",
+                      flush=True)
+            else:
+                print(f"[val] step={step} val_ce={val_ce:.4f} "
+                      f"best={best_val:.4f}", flush=True)
         if cfg.save_every_steps > 0 and step % cfg.save_every_steps == 0:
             save_checkpoint(run_root / "last.pt", model, optimizer,
                             step=step, tokens_seen=tokens_seen)
 
     save_checkpoint(run_root / "final.pt", model, optimizer, step=step,
                     tokens_seen=tokens_seen)
+    print(f"[done] steps={step} tokens_seen={tokens_seen} "
+          f"best_val={best_val:.4f} run={run_root}", flush=True)
     logger.close()
     return run_root
 
