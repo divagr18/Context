@@ -1,0 +1,42 @@
+run_tag: smoke
+seed: 11
+model:
+  scale: tiny
+  variant: V1
+framing: single_shot
+data:
+  train_shards:
+    - data/shards/train.jsonl
+  val_shards:
+    - data/shards/val.jsonl
+training:
+  total_tokens: 20000000
+  effective_batch_tokens: 131072
+  max_seq: 4096
+  lr: 0.0003
+  warmup_frac: 0.02
+  min_lr_frac: 0.1
+  weight_decay: 0.1
+  beta1: 0.9
+  beta2: 0.95
+  grad_clip: 1.0
+  use_bf16: true
+recall_shaping:
+  every: 0
+  subsample: 4
+  lambda_drop: 5.0
+  lambda_waste: 1.0
+aux:
+  coref: false
+  temporal: false
+  negation: false
+  binding_attn: false
+  salience: false
+logging:
+  run_dir: runs
+  log_every: 5
+checkpoint:
+  save_every_steps: 50
+eval:
+  every_steps: 50
+  val_max_samples: 16

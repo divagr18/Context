@@ -27,7 +27,7 @@ class TrainingDataset:
 
     def __init__(self, shard_paths, tok, kind: str = KIND_SINGLE_SHOT,
                  seed: int = 0, shuffle_buffer: int = 0,
-                 all_ratios: bool = True):
+                 all_ratios: bool = True, with_records: bool = False):
         if kind not in (KIND_SINGLE_SHOT, KIND_STREAMING):
             raise ValueError(f"unknown kind: {kind}")
         self.shard_paths = list(shard_paths)
@@ -36,6 +36,7 @@ class TrainingDataset:
         self.seed = seed
         self.shuffle_buffer = shuffle_buffer
         self.all_ratios = all_ratios
+        self.with_records = with_records
 
     def _records(self):
         records = iter_shards_many(self.shard_paths)
@@ -43,15 +44,17 @@ class TrainingDataset:
             records = ShuffleBuffer(self.seed, self.shuffle_buffer)(records)
         return records
 
-    def __iter__(self) -> Iterator[PackSample]:
+    def __iter__(self):
         rng = random.Random(self.seed + 1)
         for rec in self._records():
             if rec.kind != self.kind:
                 continue
             if rec.kind == KIND_SINGLE_SHOT:
-                yield from self._single_shot(rec, rng)
+                for sample in self._single_shot(rec, rng):
+                    yield (sample, rec) if self.with_records else sample
             else:
-                yield from window_samples(rec, self.tok)
+                for sample in window_samples(rec, self.tok):
+                    yield (sample, rec) if self.with_records else sample
 
     def _single_shot(self, rec, rng) -> Iterator[PackSample]:
         ratios = (list(available_ratios(rec.c_renders)) if self.all_ratios
