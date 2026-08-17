@@ -122,3 +122,52 @@ def test_recall_shaping_loss_cpu(tok):
     assert torch.isfinite(extra)
     assert 0.0 <= r_bar <= 1.0
     assert 0.0 <= h_bar <= 1.0
+
+
+def test_train_seed_override(tmp_path):
+    """--seed must override the config seed and drive the run dir / resolved
+    config (G1 grid runs variants x seeds from one config file each)."""
+    import yaml
+    import track_a.train as train_mod
+    from track_a.tests._shard_fixtures import (
+        make_single_shot_record, write_shards,
+    )
+
+    shard = write_shards([make_single_shot_record()],
+                         tmp_path / "train.jsonl")
+    cfg = {
+        "run_tag": "seedtest", "seed": 11, "framing": "single_shot",
+        "model": {"d_model": 32, "n_layers": 2, "n_heads": 4, "head_dim": 8,
+                  "n_kv_heads": 2, "ffn_hidden": 64, "rope_theta": 10000.0,
+                  "max_seq": 4096},
+        "data": {"train_shards": [str(shard)], "val_shards": []},
+        "training": {"total_tokens": 512, "effective_batch_tokens": 256,
+                     "max_seq": 4096, "lr": 0.0003, "use_bf16": False},
+        "recall_shaping": {"every": 0},
+        "logging": {"run_dir": str(tmp_path / "runs"), "log_every": 1},
+        "checkpoint": {"save_every_steps": 0},
+        "eval": {"every_steps": 0},
+    }
+    p = tmp_path / "cfg.yaml"
+    p.write_text(yaml.safe_dump(cfg), encoding="utf-8")
+    run_root = train_mod.train(str(p), seed=22)
+    assert run_root.name == "seedtest-22", \
+        f"run dir must use the override seed, got {run_root.name}"
+    assert "seed=22" in (run_root / "config.yaml").read_text(encoding="utf-8")
+
+
+def test_g1_grid_configs_resolve():
+    """All five G1 tiny variant configs must resolve with the G0-picked LR
+    (6e-4, PLAN 7) and identical non-model recipe as V1."""
+    base = load_run_config("configs/train_tiny.yaml")
+    assert base.lr == 0.0006, "G0 LR pick (6e-4) must be applied to V1"
+    for variant in ("V0", "V2", "V3", "V4"):
+        cfg = load_run_config(f"configs/train_tiny_{variant}.yaml")
+        assert cfg.run_tag == f"tiny-{variant}"
+        assert cfg.lr == 0.0006, f"{variant}: G0 LR pick not applied"
+        assert cfg.model.n_layers == base.model.n_layers
+        assert cfg.model.d_model == base.model.d_model
+        assert cfg.total_tokens == base.total_tokens
+        assert cfg.effective_batch_tokens == base.effective_batch_tokens
+        assert cfg.weight_decay == base.weight_decay
+        assert cfg.use_bf16 == base.use_bf16

@@ -1,8 +1,8 @@
-run_tag: tiny-V1
+run_tag: tiny-V0
 seed: 11
 model:
   scale: tiny
-  variant: V1
+  variant: V0
 framing: single_shot
 data:
   train_shards:

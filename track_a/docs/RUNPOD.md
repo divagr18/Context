@@ -53,6 +53,25 @@ bash scripts/runpod_entry.sh configs/train_g0_lr3e-4.yaml
 bash scripts/runpod_entry.sh configs/train_g0_lr6e-4.yaml
 ```
 
+G1 grid (PLAN 8): one config per variant, seeds {11,22,33} from the CLI so
+each run dir is unique (the config's own seed is just the default):
+
+```bash
+for cfg in configs/train_tiny.yaml configs/train_tiny_V0.yaml \
+           configs/train_tiny_V2.yaml configs/train_tiny_V3.yaml \
+           configs/train_tiny_V4.yaml; do
+  for seed in 11 22 33; do
+    bash scripts/runpod_entry.sh "$cfg" --seed "$seed"
+  done
+done
+```
+
+`--seed N` is forwarded to `python -m track_a.train`. All five configs
+share the identical non-model recipe with the G0-picked LR 6e-4 (PLAN 7);
+the only axis that varies is `model.variant` (attn:FFN ratio). First 2
+grid runs are the G1-contingency gate (PLAN 8): check throughput and
+val-loss sanity before launching the rest.
+
 The entrypoint: pins-checks torch, regenerates all four shard sets from the
 committed split configs (deterministic; ~$0.25 CPU per pod, PLAN 5.2),
 trains, then runs the eval battery on best/final checkpoint and writes

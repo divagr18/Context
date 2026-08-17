@@ -3,11 +3,12 @@
 # One run per pod invocation; artifacts land in runs/<run_tag>-<seed>/.
 #
 # Usage:
-#   scripts/runpod_entry.sh [train-config] [extra eval shards...]
 #   scripts/runpod_entry.sh configs/train_tiny.yaml
+#   scripts/runpod_entry.sh configs/train_tiny.yaml --seed 22
 set -euo pipefail
 
 CONFIG="${1:-configs/train_tiny.yaml}"
+shift || true
 PYTHON="${PYTHON:-python}"
 # Linux pods: expandable_segments defragments. (Windows dev boxes: use
 # backend:cudaMallocAsync instead -- see docs/RUNPOD.md section 6.)
@@ -30,7 +31,7 @@ for split in train val test-id test-ood; do
 done
 
 echo "[runpod] training: $CONFIG"
-"$PYTHON" -m track_a.train --config "$CONFIG"
+"$PYTHON" -m track_a.train --config "$CONFIG" "$@"
 
 RUN_DIR=$(ls -dt runs/*/ | head -n 1)
 RUN_DIR="${RUN_DIR%/}"

@@ -102,10 +102,14 @@ def evaluate(model, val_shards, tok, kind, device, use_bf16, max_samples,
     return total / max(1, n)
 
 
-def train(cfg_path: str, total_tokens=None, micro_batch=None) -> Path:
+def train(cfg_path: str, total_tokens=None, micro_batch=None, seed=None) -> Path:
     cfg = load_run_config(cfg_path)
     if total_tokens is not None:
         cfg = replace(cfg, total_tokens=int(total_tokens))
+    if seed is not None:
+        # G1 grid runs variants x seeds from one config file per variant
+        # (PLAN SEEDS); the CLI override wins so run dirs stay seed-unique.
+        cfg = replace(cfg, seed=int(seed))
     set_seed(cfg.seed)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     tok = get_tokenizer()
@@ -270,9 +274,12 @@ def main(argv=None) -> None:
     parser.add_argument("--config", required=True)
     parser.add_argument("--total-tokens", type=int, default=None)
     parser.add_argument("--micro-batch", type=int, default=None)
+    parser.add_argument("--seed", type=int, default=None,
+                        help="override the config seed (G1 grid: one config "
+                             "per variant, seeds from the CLI)")
     args = parser.parse_args(argv)
     run_root = train(args.config, total_tokens=args.total_tokens,
-                     micro_batch=args.micro_batch)
+                     micro_batch=args.micro_batch, seed=args.seed)
     print(f"training complete -> {run_root}")
 
 
