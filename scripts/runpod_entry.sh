@@ -48,8 +48,14 @@ RUN_DIR="${RUN_DIR%/}"
 CKPT="$RUN_DIR/final.pt"
 echo "[runpod] run dir: $RUN_DIR | checkpoint: $CKPT"
 
-echo "[runpod] eval battery (test-id + test-ood)"
+# Scoped eval: primary needle metrics over 30 docs, 2 QA probes/doc.
+# The QA probe is diagnostic-only (PLAN Q5+); the full battery's 8 Qs x 5
+# ratios per doc is the slow part. Scope matches the G1-diagnosis runs so
+# results are comparable; override with EVAL_ARGS for a full battery.
+EVAL_ARGS="${EVAL_ARGS:---max-docs 30 --qa-per-doc 2}"
+echo "[runpod] eval battery (test-id + test-ood) [${EVAL_ARGS}]"
 "$PYTHON" -m track_a.eval --config "$CONFIG" --checkpoint "$CKPT" \
   --shards data/shards/test-id.jsonl data/shards/test-ood.jsonl \
+  $EVAL_ARGS \
   --out "$RUN_DIR/eval_report.json"
 echo "[runpod] done -> $RUN_DIR/eval_report.json"
