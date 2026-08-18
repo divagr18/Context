@@ -1,9 +1,12 @@
 # train split: in-domain (project_updates), paraphrase indices 0-5.
+# n_docs=20000 (G1 diagnosis): 1000 docs x 500M tokens = ~41 epochs -> pure
+# memorization (final.pt reproduces train docs byte-perfectly, degenerate on
+# held-out). 20000 docs -> ~2 epochs at the 500M budget.
 split: train
 kind: single_shot
 domain: project_updates
 doc_len_name: short
-n_docs: 1000
+n_docs: 20000
 seed: 12345
 paraphrase_idx_range: [0, 5]
 decoys_per_queried: [1, 3]

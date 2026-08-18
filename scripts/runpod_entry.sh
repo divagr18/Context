@@ -23,20 +23,29 @@ print("cuda:", torch.version.cuda, "| device:", torch.cuda.get_device_name(0))
 PY
 nvidia-smi --query-gpu=name,driver_version,memory.total --format=csv,noheader || true
 
-echo "[runpod] regenerating shards from committed split configs (PLAN 5.2)"
-for split in train val test-id test-ood; do
-  "$PYTHON" -m track_a.needle_gen.corpus_writer \
-    --config "track_a/needle_gen/splits/${split}.yaml" \
-    --out "data/shards/${split}.jsonl"
-done
+# REGEN=1 forces shard regeneration; otherwise regenerate only when shards
+# are missing. Shards are deterministic per committed split config (PLAN
+# 5.2). NOTE: after a split-config change (e.g. n_docs bump) force REGEN=1
+# for the first run -- stale shards silently train the wrong corpus.
+if [ "${REGEN:-0}" = "1" ] || [ ! -f data/shards/train.jsonl ]; then
+  for split in train val test-id test-ood; do
+    "$PYTHON" -m track_a.needle_gen.corpus_writer \
+      --config "track_a/needle_gen/splits/${split}.yaml" \
+      --out "data/shards/${split}.jsonl"
+  done
+else
+  echo "[runpod] shards exist; skipping regeneration (REGEN=0)"
+fi
 
 echo "[runpod] training: $CONFIG"
 "$PYTHON" -m track_a.train --config "$CONFIG" "$@"
 
 RUN_DIR=$(ls -dt runs/*/ | head -n 1)
 RUN_DIR="${RUN_DIR%/}"
+# Track A checkpoint selection: final.pt, not best.pt. Val CE rises exactly
+# when the model starts memorizing the facts -- the capability under test --
+# so early-stopping on val CE picks a grammar-only checkpoint (G1 diagnosis).
 CKPT="$RUN_DIR/final.pt"
-if [ -f "$RUN_DIR/best.pt" ]; then CKPT="$RUN_DIR/best.pt"; fi
 echo "[runpod] run dir: $RUN_DIR | checkpoint: $CKPT"
 
 echo "[runpod] eval battery (test-id + test-ood)"

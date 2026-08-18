@@ -213,11 +213,14 @@ def train(cfg_path: str, total_tokens=None, micro_batch=None, seed=None) -> Path
                 p.grad.div_(accum_count)
         extra_r = extra_h = 0.0
         if cfg.recall_every > 0 and step % cfg.recall_every == 0:
-            subsample = []
+            # Drain the probe buffer after each use so successive probes
+            # see fresh samples (previously the buffer was never consumed,
+            # so recall-shaping probed the same docs every 100 steps).
             refill(probe_buf, it_ref, cfg.recall_subsample)
-            for s, rec in probe_buf[:cfg.recall_subsample]:
-                if len(s.input_ids) <= cfg.max_seq:
-                    subsample.append((s, rec))
+            probe_items = probe_buf[:cfg.recall_subsample]
+            probe_buf[:] = probe_buf[cfg.recall_subsample:]
+            subsample = [(s, rec) for s, rec in probe_items
+                         if len(s.input_ids) <= cfg.max_seq]
             if subsample:
                 extra, extra_r, extra_h = recall_shaping_loss(
                     model, subsample, tok, cfg, pad_id, c_close_id, device)
